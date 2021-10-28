@@ -1,0 +1,14 @@
+2
+~
+Hello, Peace!
+Entered N: 4
+~
+777
+~
+Hello, Peace!
+Entered N: 777
+~
+-2
+~
+Hello, Peace!
+Entered N: 8

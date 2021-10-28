@@ -1,10 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Validator {
+
+    private static final String DATA_DELIMITER = "~";
+    //new ProcessBuilder(new String[]{"cmd.exe", "/c", "R:\\task1.exe"}).start();
+    // System.out.println(System.getProperty("user.dir"));
+    //File dir = new File("D:\\bat_scripts");
+    //processBuilder.directory(dir);
 
     public static void validateSolution(String referenceFilename/*taskNumber*/, String solutionFilename, String[] inputData, boolean isStandardInput) {
         String referenceCommand; // taskNumber instead refFilename ??? TODO
@@ -27,7 +32,8 @@ public class Validator {
         if (referenceOutput.equals(solutionOutput)) {
             System.out.println("Test passed.");
         } else {
-            System.out.println("Test failed.");
+            System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData)
+                    + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
         }
     }
 
@@ -58,7 +64,7 @@ public class Validator {
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new ValidatorException("Error while file executing.\n" +
-                        "Error code:\n" + exitCode);
+                        "Error code:" + exitCode);
             }
             if (process.getErrorStream().read() != -1) {
                 throw new ValidatorException("Error while file executing.\n" +
@@ -72,6 +78,92 @@ public class Validator {
         return resultList;
     }
 
+    public static void testSolutionOnTestCases(String solutionFilename, boolean isStandardInput, String testFilename) {
+        String[] readFile = readTestCasesFromFile(testFilename); // чётное - Input, нечётное - Output
+        //***************
+        for (int i = 0; i < readFile.length / 2; i++) {
+            //System.out.println("Test#" + i);
+            //System.out.println("Input: " + readFile[i * 2]);
+            //System.out.println("Output: " + readFile[i * 2 + 1]);
+            //***************
+            String[] inputData = readFile[i * 2].split(" ");
+            String executeCommand;
+            if (isStandardInput) { // From keyboard
+                executeCommand = solutionFilename;
+            } else { // From passed command line params
+                String passedParams = Arrays.toString(inputData)
+                        .replace("[", "").replace("]", "").replace(",", "");
+                executeCommand = solutionFilename + " " + passedParams;
+            }
+            //***************
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("cmd.exe", "/c", executeCommand);
+            StringBuilder resultSB = new StringBuilder();
+
+            try {
+                Process process = processBuilder.start();
+
+                if (isStandardInput) {
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+                    for (String someInput : inputData) {
+                        writer.write(someInput + "\n");
+                    }
+                    writer.flush();
+                }
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    resultSB.append(line);
+                    //System.out.println(line);
+                }
+                reader.close();
+
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    throw new ValidatorException("Error while file executing.\n" +
+                            "Error code:" + exitCode);
+                }
+                if (process.getErrorStream().read() != -1) {
+                    throw new ValidatorException("Error while file executing.\n" +
+                            "Error stream:\n" + process.getErrorStream());
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (resultSB.toString().equals(readFile[i * 2 + 1])) {
+                System.out.println("Test#" + i + " PASSED.");
+            } else {
+                System.out.println("Test#" + i + " FAILED.");
+            }
+        }
+        //***************
+    }
+
+    private static String[] readTestCasesFromFile(String filename) {
+        InputStream in = Validator.class.getResourceAsStream(filename);
+        if (in == null) {
+            System.out.println("NULL!");
+            throw new ValidatorException("Cannot open testCasesFile: " + filename);
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            String someString;
+            while ((someString = reader.readLine()) != null) {
+                stringBuilder.append(someString);
+            }
+        } catch (Exception e) {
+            System.err.println("Cannot read testCasesFile!");
+            e.printStackTrace();
+        }
+
+        return stringBuilder.toString().split(Validator.DATA_DELIMITER); // чётное - Input, нечётное - Output
+    }
+
     public static void main(String[] args) {
         boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
         if (!isWindows) {
@@ -80,5 +172,7 @@ public class Validator {
         }
 
         Validator.validateSolution("task1.exe", "R:\\TestProg.exe", new String[]{"2"}, true);
+        Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task1.txt");
+        Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task2.txt");
     }
 }
