@@ -26,13 +26,10 @@ public class Validator {
         List<String> solutionOutput = startProcess(solutionCommand, inputData, isStandardInput);
 
         if (referenceOutput.equals(solutionOutput)) {
-            //System.out.println("Test passed.");
-            Main.form.textAreaTestResult.setText("Test passed.");
+            Main.form.textAreaTestResult.setText("Test passed."); //System.out.println("Test passed.");
         } else {
-            //System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData)
-                    //+ "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
             Main.form.textAreaTestResult.setText("Test failed.\nInput data: " + Arrays.toString(inputData)
-                    + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
+                    + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput); //System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData) + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
         }
     }
 
@@ -49,14 +46,13 @@ public class Validator {
                 for (String someInput : inputData) {
                     writer.write(someInput + "\n");
                 }
-                writer.flush(); // writer.close();
+                writer.flush();
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                resultList.add(line);
-                //System.out.println(line);
+                resultList.add(line); //System.out.println(line);
             }
             reader.close();
 
@@ -69,7 +65,6 @@ public class Validator {
                 throw new ValidatorException("Error while file executing.\n" +
                         "Error stream:\n" + process.getErrorStream());
             }
-            //System.out.println("\nExited with code : " + exitCode); // process.exitValue()
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -78,7 +73,7 @@ public class Validator {
     }
 
     public static void testSolutionOnTestCases(String solutionFilename, boolean isStandardInput, String testFilename) {
-        String[] readFile = readTestCasesFromFile(testFilename); // чётное - Input, нечётное - Output
+        String[] readFile = readTestCasesFromFile(testFilename); // чётный индекс - Input, нечётный - Output
         StringBuilder sb = new StringBuilder();
         //***************
         for (int i = 0; i < readFile.length / 2; i++) {
@@ -96,7 +91,6 @@ public class Validator {
                 executeCommand = solutionFilename + " " + passedParams;
             }
             //***************
-
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("cmd.exe", "/c", executeCommand);
             StringBuilder resultSB = new StringBuilder();
@@ -165,7 +159,7 @@ public class Validator {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString().split(Validator.TEST_DATA_DELIMITER); // чётное - Input, нечётное - Output
+        return stringBuilder.toString().split(Validator.TEST_DATA_DELIMITER);
     }
 
     public static void main(String[] args) {

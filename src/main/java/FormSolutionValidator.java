@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 public class FormSolutionValidator extends JFrame implements ActionListener {
 
+    private static final String SECRET_PATH_TO_EXECUTABLE_FILES = "R:\\"; // TODO + secret path
+
     JLabel labelTaskNumber, labelPathToFile, labelTaskText, labelInputData, labelTestResult;
     JTextField textFieldPath;
     JComboBox<String> comboBoxTaskNumber;
@@ -100,8 +102,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             try {
                 textFromFile = readTextFromFile(filename);
             } catch (IOException e) {
-                textAreaTaskText.setText("Cannot read text task from file: " + filename);
-                //System.err.println("Cannot read text task from file: " + filename);
+                textAreaTaskText.setText("Cannot read text task from file: " + filename); //System.err.println("Cannot read text task from file: " + filename);
                 return;
             }
             textAreaTaskText.setText(textFromFile);
@@ -112,12 +113,11 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             Validator.testSolutionOnTestCases(solutionFilename, true, testFilename);
         } else if (event.getSource() == buttonRealtimeCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
-            String secretDirectory = "R:\\";
-            String referenceFilename = secretDirectory + "task_" + taskNumber + ".exe"; // TODO + secret path
+            String referenceFilename = SECRET_PATH_TO_EXECUTABLE_FILES + "task_" + taskNumber + ".exe";
             String solutionFilename = textFieldPath.getText();
             String[] inputData = textAreaInputData.getText().split("\n");
             System.out.println(Arrays.toString(inputData));
-            Validator.validateSolution(referenceFilename, solutionFilename, inputData, true); // TODO Input data
+            Validator.validateSolution(referenceFilename, solutionFilename, inputData, true);
         } else if (event.getSource() == buttonPath) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
