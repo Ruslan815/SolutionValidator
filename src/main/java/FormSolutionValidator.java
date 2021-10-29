@@ -2,15 +2,16 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Arrays;
 
 public class FormSolutionValidator extends JFrame implements ActionListener {
 
-    JLabel labelTaskNumber, labelPathToFile, labelTaskText, labelTestResult;
+    JLabel labelTaskNumber, labelPathToFile, labelTaskText, labelInputData, labelTestResult;
     JTextField textFieldPath;
     JComboBox<String> comboBoxTaskNumber;
     JButton buttonBaseCheck, buttonRealtimeCheck, buttonPath;
-    JTextArea textAreaTaskText, textAreaTestResult;
-    JScrollPane scrollTask, scrollResult;
+    JTextArea textAreaTaskText, textAreaInputData, textAreaTestResult;
+    JScrollPane scrollTask, scrollInput, scrollResult;
 
     FormSolutionValidator() {
         labelTaskNumber = new JLabel("Задание №");
@@ -61,18 +62,27 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         scrollTask.setBounds(10, 130, 500, 150);
         this.add(scrollTask);
 
+        labelInputData = new JLabel("Входные данные(только для проверки в реальном времени):");
+        labelInputData.setBounds(10, 240, 500, 150);
+        this.add(labelInputData);
+
+        textAreaInputData = new JTextArea();
+        scrollInput = new JScrollPane(textAreaInputData);
+        scrollInput.setBounds(10, 330, 500, 150);
+        this.add(scrollInput);
+
         labelTestResult = new JLabel("Результаты тестирования:");
-        labelTestResult.setBounds(10, 300, 250, 15);
+        labelTestResult.setBounds(10, 500, 250, 15);
         this.add(labelTestResult);
 
         textAreaTestResult = new JTextArea();
         textAreaTestResult.setEditable(false);
         scrollResult = new JScrollPane(textAreaTestResult);
-        scrollResult.setBounds(10, 320, 500, 250);
+        scrollResult.setBounds(10, 520, 500, 250);
         this.add(scrollResult);
 
         this.setTitle("Solution Validator");
-        this.setBounds(700, 250, 550, 650);
+        this.setBounds(700, 150, 550, 850);
         this.setResizable(false);
         this.setLayout(null); // Using no layout manager
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -102,9 +112,12 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             Validator.testSolutionOnTestCases(solutionFilename, true, testFilename);
         } else if (event.getSource() == buttonRealtimeCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
-            String referenceFilename = "task_" + taskNumber + ".exe";
+            String secretDirectory = "R:\\";
+            String referenceFilename = secretDirectory + "task_" + taskNumber + ".exe"; // TODO + secret path
             String solutionFilename = textFieldPath.getText();
-            Validator.validateSolution(referenceFilename, solutionFilename, null, true); // TODO Input data
+            String[] inputData = textAreaInputData.getText().split("\n");
+            System.out.println(Arrays.toString(inputData));
+            Validator.validateSolution(referenceFilename, solutionFilename, inputData, true); // TODO Input data
         } else if (event.getSource() == buttonPath) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));

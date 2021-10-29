@@ -5,22 +5,18 @@ import java.util.List;
 
 public class Validator {
 
-    private static final String DATA_DELIMITER = "~";
-    //new ProcessBuilder(new String[]{"cmd.exe", "/c", "R:\\task1.exe"}).start();
-    // System.out.println(System.getProperty("user.dir"));
-    //File dir = new File("D:\\bat_scripts");
-    //processBuilder.directory(dir);
+    private static final String TEST_DATA_DELIMITER = "~";
 
     public static void validateSolution(String referenceFilename/*taskNumber*/, String solutionFilename, String[] inputData, boolean isStandardInput) {
         String referenceCommand; // taskNumber instead refFilename ??? TODO
         String solutionCommand;
         if (isStandardInput) { // From keyboard
-            referenceCommand = "exec\\" + referenceFilename;
+            referenceCommand = referenceFilename;
             solutionCommand = solutionFilename;
         } else { // From passed command line params
             String passedParams = Arrays.toString(inputData)
                     .replace("[", "").replace("]", "").replace(",", "");
-            referenceCommand = "exec\\" + referenceFilename + " " + passedParams;
+            referenceCommand = referenceFilename + " " + passedParams;
             solutionCommand = solutionFilename + " " + passedParams;
         }
         System.out.println("Ref command to execute: " + referenceCommand);
@@ -30,16 +26,19 @@ public class Validator {
         List<String> solutionOutput = startProcess(solutionCommand, inputData, isStandardInput);
 
         if (referenceOutput.equals(solutionOutput)) {
-            System.out.println("Test passed.");
+            //System.out.println("Test passed.");
+            Main.form.textAreaTestResult.setText("Test passed.");
         } else {
-            System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData)
+            //System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData)
+                    //+ "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
+            Main.form.textAreaTestResult.setText("Test failed.\nInput data: " + Arrays.toString(inputData)
                     + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
         }
     }
 
     private static List<String> startProcess(String executeCommand, String[] inputData, boolean isStandardInput) {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("cmd.exe", "/c", executeCommand); // "exec\\task1.exe"
+        processBuilder.command("cmd.exe", "/c", executeCommand); // "task1.exe"
         List<String> resultList = new ArrayList<>();
 
         try {
@@ -166,7 +165,7 @@ public class Validator {
             e.printStackTrace();
         }
 
-        return stringBuilder.toString().split(Validator.DATA_DELIMITER); // чётное - Input, нечётное - Output
+        return stringBuilder.toString().split(Validator.TEST_DATA_DELIMITER); // чётное - Input, нечётное - Output
     }
 
     public static void main(String[] args) {
