@@ -7,8 +7,8 @@ public class Validator {
 
     private static final String TEST_DATA_DELIMITER = "~";
 
-    public static void validateSolution(String referenceFilename/*taskNumber*/, String solutionFilename, String[] inputData, boolean isStandardInput) {
-        String referenceCommand; // taskNumber instead refFilename ??? TODO
+    public static void validateSolution(String referenceFilename, String solutionFilename, String[] inputData, boolean isStandardInput) {
+        String referenceCommand;
         String solutionCommand;
         if (isStandardInput) { // From keyboard
             referenceCommand = referenceFilename;
@@ -109,8 +109,7 @@ public class Validator {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    resultSB.append(line);
-                    //System.out.println(line);
+                    resultSB.append(line); //System.out.println(line);
                 }
                 reader.close();
 
@@ -160,11 +159,5 @@ public class Validator {
         }
 
         return stringBuilder.toString().split(Validator.TEST_DATA_DELIMITER);
-    }
-
-    public static void main(String[] args) {
-        Validator.validateSolution("task1.exe", "R:\\TestProg.exe", new String[]{"2"}, true);
-        Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task1.txt");
-        Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task2.txt");
     }
 }

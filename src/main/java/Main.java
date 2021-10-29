@@ -13,6 +13,5 @@ public class Main {
     public static void main(String[] args) {
         checkOperatingSystem();
         form = new FormSolutionValidator();
-
     }
 }

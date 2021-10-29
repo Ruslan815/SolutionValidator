@@ -124,8 +124,12 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                textFieldPath.setText(selectedFile.getAbsolutePath());
+                String absolutePath = selectedFile.getAbsolutePath();
+                if (!absolutePath.endsWith(".exe")) {
+                    JOptionPane.showMessageDialog(this, "Выберите исполняемый(.exe) файл!");
+                    return;
+                }
+                textFieldPath.setText(absolutePath); //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             }
         }
     }
