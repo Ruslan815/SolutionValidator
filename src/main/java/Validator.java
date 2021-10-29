@@ -80,6 +80,7 @@ public class Validator {
 
     public static void testSolutionOnTestCases(String solutionFilename, boolean isStandardInput, String testFilename) {
         String[] readFile = readTestCasesFromFile(testFilename); // чётное - Input, нечётное - Output
+        StringBuilder sb = new StringBuilder();
         //***************
         for (int i = 0; i < readFile.length / 2; i++) {
             //System.out.println("Test#" + i);
@@ -135,11 +136,15 @@ public class Validator {
 
             if (resultSB.toString().equals(readFile[i * 2 + 1])) {
                 System.out.println("Test#" + i + " PASSED.");
+                sb.append("Test#").append(i).append(" PASSED.");
             } else {
                 System.out.println("Test#" + i + " FAILED.");
+                sb.append("Test#").append(i).append(" FAILED.");
             }
+            sb.append(System.lineSeparator());
         }
         //***************
+        Main.form.textAreaTestResult.setText(sb.toString());
     }
 
     private static String[] readTestCasesFromFile(String filename) {
@@ -165,12 +170,6 @@ public class Validator {
     }
 
     public static void main(String[] args) {
-        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
-        if (!isWindows) {
-            System.out.println("This software can be run only on Windows.");
-            System.exit(777);
-        }
-
         Validator.validateSolution("task1.exe", "R:\\TestProg.exe", new String[]{"2"}, true);
         Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task1.txt");
         Validator.testSolutionOnTestCases("R:\\TestProg.exe", true, "task2.txt");
