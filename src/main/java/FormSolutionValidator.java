@@ -121,9 +121,16 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         } else if (event.getSource() == buttonRealtimeCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
             String referenceFilename = SECRET_PATH_TO_EXECUTABLE_FILES + "task_" + taskNumber + ".exe";
+            if (!Validator.isFileExists(referenceFilename)) {
+                FormSolutionValidator.showMessage(this, "Эталонный файл не существует!");
+                return;
+            }
             String solutionFilename = textFieldPath.getText();
-            String[] inputData = textAreaInputData.getText().split("\n");
-            System.out.println(Arrays.toString(inputData));
+            if (!Validator.isFileExists(solutionFilename)) {
+                FormSolutionValidator.showMessage(this, "Указанный файл не существует!");
+                return;
+            }
+            String[] inputData = textAreaInputData.getText().split("\n"); // Get input data
             Validator.validateSolution(referenceFilename, solutionFilename, inputData, true);
 
         } else if (event.getSource() == buttonPath) {

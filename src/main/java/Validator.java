@@ -19,8 +19,8 @@ public class Validator {
             referenceCommand = referenceFilename + " " + passedParams;
             solutionCommand = solutionFilename + " " + passedParams;
         }
-        System.out.println("Ref command to execute: " + referenceCommand);
-        System.out.println("Sol command to execute: " + solutionCommand);
+        //System.out.println("Ref command to execute: " + referenceCommand);
+        //System.out.println("Sol command to execute: " + solutionCommand);
 
         List<String> referenceOutput = startProcess(referenceCommand, inputData, isStandardInput);
         List<String> solutionOutput = startProcess(solutionCommand, inputData, isStandardInput);
@@ -35,7 +35,7 @@ public class Validator {
 
     private static List<String> startProcess(String executeCommand, String[] inputData, boolean isStandardInput) {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("cmd.exe", "/c", executeCommand); // "task1.exe"
+        processBuilder.command("cmd.exe", "/c", executeCommand);
         List<String> resultList = new ArrayList<>();
 
         try {
@@ -47,7 +47,7 @@ public class Validator {
                     writer.write(someInput + "\n");
                 }
                 writer.flush();
-                // writer.close();
+                writer.close();
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -57,14 +57,17 @@ public class Validator {
             }
             reader.close();
 
+            // Error handling
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                throw new ValidatorException("Error while file executing.\n" +
+                FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
                         "Error code:" + exitCode);
+                throw new ValidatorException("Error while file executing.\n" + "Error code:" + exitCode);
             }
             if (process.getErrorStream().read() != -1) {
-                throw new ValidatorException("Error while file executing.\n" +
+                FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
                         "Error stream:\n" + process.getErrorStream());
+                throw new ValidatorException("Error while file executing.\n" + "Error stream:\n" + process.getErrorStream());
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -82,7 +85,7 @@ public class Validator {
             //System.out.println("Input: " + readFile[i * 2]);
             //System.out.println("Output: " + readFile[i * 2 + 1]);
             //***************
-            String[] inputData = readFile[i * 2].split(" ");
+            String[] inputData = readFile[i * 2].split(" "); // All input data in file must be separated by whitespaces and placed on one line
             String executeCommand;
             if (isStandardInput) { // From keyboard
                 executeCommand = solutionFilename;
@@ -115,6 +118,7 @@ public class Validator {
                 }
                 reader.close();
 
+                // Error handling
                 int exitCode = process.waitFor();
                 if (exitCode != 0) {
                     FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
