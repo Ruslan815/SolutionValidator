@@ -59,6 +59,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         this.add(labelTaskText);
 
         textAreaTaskText = new JTextArea();
+        textAreaTaskText.setText("Work Hard!");
         textAreaTaskText.setEditable(false);
         scrollTask = new JScrollPane(textAreaTaskText);
         scrollTask.setBounds(10, 130, 500, 150);
@@ -95,10 +96,10 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         int selectedIndex = comboBoxTaskNumber.getSelectedIndex();
         if (selectedIndex == -1) return;
 
-        if (event.getSource() == comboBoxTaskNumber) {
+        if (event.getSource() == comboBoxTaskNumber) { // TODO issue display with UTF-8 and ASCII
             String taskPageNumber = comboBoxTaskNumber.getItemAt(selectedIndex).split("_")[0];
             String filename = "text_task_" + taskPageNumber + ".txt";
-            String textFromFile = "";
+            String textFromFile;
             try {
                 textFromFile = readTextFromFile(filename);
             } catch (IOException e) {
@@ -106,11 +107,17 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                 return;
             }
             textAreaTaskText.setText(textFromFile);
+
         } else if (event.getSource() == buttonBaseCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
             String testFilename = "task_" + taskNumber + ".txt";
             String solutionFilename = textFieldPath.getText();
+            if (!Validator.isFileExists(solutionFilename)) {
+                FormSolutionValidator.showMessage(this, "Указанный файл не существует!");
+                return;
+            }
             Validator.testSolutionOnTestCases(solutionFilename, true, testFilename);
+
         } else if (event.getSource() == buttonRealtimeCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
             String referenceFilename = SECRET_PATH_TO_EXECUTABLE_FILES + "task_" + taskNumber + ".exe";
@@ -118,6 +125,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             String[] inputData = textAreaInputData.getText().split("\n");
             System.out.println(Arrays.toString(inputData));
             Validator.validateSolution(referenceFilename, solutionFilename, inputData, true);
+
         } else if (event.getSource() == buttonPath) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -126,7 +134,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                 File selectedFile = fileChooser.getSelectedFile();
                 String absolutePath = selectedFile.getAbsolutePath();
                 if (!absolutePath.endsWith(".exe")) {
-                    JOptionPane.showMessageDialog(this, "Выберите исполняемый(.exe) файл!");
+                    FormSolutionValidator.showMessage(this, "Выберите исполняемый(.exe) файл!");
                     return;
                 }
                 textFieldPath.setText(absolutePath); //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
@@ -150,5 +158,9 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static void showMessage(Component parentComponent, String message) {
+        JOptionPane.showMessageDialog(parentComponent, message);
     }
 }

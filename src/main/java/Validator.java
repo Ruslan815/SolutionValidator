@@ -47,6 +47,7 @@ public class Validator {
                     writer.write(someInput + "\n");
                 }
                 writer.flush();
+                // writer.close();
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -104,6 +105,7 @@ public class Validator {
                         writer.write(someInput + "\n");
                     }
                     writer.flush();
+                    writer.close();
                 }
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -115,14 +117,17 @@ public class Validator {
 
                 int exitCode = process.waitFor();
                 if (exitCode != 0) {
-                    throw new ValidatorException("Error while file executing.\n" +
+                    FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
                             "Error code:" + exitCode);
+                    throw new ValidatorException("Error while file executing.\n" + "Error code:" + exitCode);
                 }
                 if (process.getErrorStream().read() != -1) {
-                    throw new ValidatorException("Error while file executing.\n" +
+                    FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
                             "Error stream:\n" + process.getErrorStream());
+                    throw new ValidatorException("Error while file executing.\n" + "Error stream:\n" + process.getErrorStream());
                 }
             } catch (IOException | InterruptedException e) {
+                FormSolutionValidator.showMessage(null, "Exception in class: " + e.getClass().toString());
                 e.printStackTrace();
             }
 
@@ -142,7 +147,7 @@ public class Validator {
     private static String[] readTestCasesFromFile(String filename) {
         InputStream in = Validator.class.getResourceAsStream(filename);
         if (in == null) {
-            System.out.println("NULL!");
+            FormSolutionValidator.showMessage(null, "Cannot open testCasesFile: " + filename);
             throw new ValidatorException("Cannot open testCasesFile: " + filename);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -154,10 +159,15 @@ public class Validator {
                 stringBuilder.append(someString);
             }
         } catch (Exception e) {
-            System.err.println("Cannot read testCasesFile!");
+            FormSolutionValidator.showMessage(null, "Cannot read testCasesFile!"); // System.err.println("Cannot read testCasesFile!");
             e.printStackTrace();
         }
 
         return stringBuilder.toString().split(Validator.TEST_DATA_DELIMITER);
+    }
+
+    public static boolean isFileExists(String filePath) {
+        File file = new File(filePath);
+        return file.exists() && !file.isDirectory();
     }
 }
