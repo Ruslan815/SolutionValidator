@@ -1,7 +1,8 @@
-import java.awt.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -10,6 +11,30 @@ import java.nio.charset.StandardCharsets;
 public class FormSolutionValidator extends JFrame implements ActionListener {
 
     private static final String SECRET_PATH_TO_EXECUTABLE_FILES = "R:\\"; // TODO + secret path
+    private static final String[] taskNumbersList = {
+            "1_1_1", "1_1_2", "1_1_3", "1_1_4", "1_1_5", "1_1_6", "1_1_7", "1_1_8",
+            "1_2_1", "1_2_2", "1_2_3", "1_2_4", "1_2_5", "1_2_6", "1_2_7", "1_2_8", "1_2_9",
+            "2_1_1", "2_1_2", "2_1_3", "2_1_4", "2_1_5", "2_1_6", "2_1_7", "2_1_8", "2_1_9", "2_1_10", "2_1_11", "2_1_12", "2_1_13", "2_1_14",
+            "3_1_1", "3_1_2", "3_1_3", "3_1_4", "3_1_5", "3_1_6", "3_1_7", "3_1_8",
+            "4_1_1", "4_1_2", "4_1_3", "4_1_4", "4_1_5", "4_1_6", "4_1_7", "4_1_8",
+            "4_2_1", "4_2_2",
+            "4_3_1", "4_3_2", "4_3_3", "4_3_4", "4_3_5", "4_3_6", "4_3_7", "4_3_8", "4_3_9", "4_3_10", "4_3_11", "4_3_12", "4_3_13", "4_3_14", "4_3_15", "4_3_16", "4_3_17", "4_3_18", "4_3_19",
+            "5_1_1", "5_1_2", "5_1_3", "5_1_4", "5_1_5", "5_1_6", "5_1_7", "5_1_8", "5_1_9", "5_1_10", "5_1_11", "5_1_12",
+            "5_2_1", "5_2_2", "5_2_3", "5_2_4",
+            "5_3_1", "5_3_2", "5_3_3", "5_3_4", "5_3_5", "5_3_6",
+            "6_1_1", "6_1_2", "6_1_3", "6_1_4", "6_1_5",
+            "7_1_1", "7_1_2", "7_1_3",
+            "8_1_1", "8_1_2", "8_1_3", "8_1_4", "8_1_5", "8_1_6", "8_1_7", "8_1_8", "8_1_9", "8_1_10", "8_1_11", "8_1_12",
+            "8_2_1", "8_2_2", "8_2_3", "8_2_4", "8_2_5", "8_2_6", "8_2_7", "8_2_8", "8_2_9", "8_2_10",
+            "8_3_1", "8_3_2", "8_3_3", "8_3_4", "8_3_5", "8_3_6", "8_3_7",
+            "8_4_1", "8_4_2", "8_4_3", "8_4_4",
+            "9_1_1", "9_1_2",
+            "10_1_1", "10_1_2", "10_1_3", "10_1_4", "10_1_5", "10_1_6", "10_1_7", "10_1_8", "10_1_9", "10_1_10", "10_1_11", "10_1_12", "10_1_13", "10_1_14", "10_1_15", "10_1_16", "10_1_17",
+            "11_1_1", "11_1_2", "11_1_3", "11_1_4", "11_1_5",
+            "12_1_1", "12_1_2", "12_1_3", "12_1_4",
+            "13_1_1", "13_1_2", "13_1_3", "13_1_4", "13_1_5", "13_1_6", "13_1_7",
+            "14_1_1", "14_1_2", "14_1_3", "14_1_4"};
+            //"15_1_1", "15_1_2", "15_1_3", "15_1_4", "15_1_5", "15_1_6", "15_1_7", "15_1_8", "15_1_9", "15_1_10", "15_1_11", "15_1_12", "15_1_13", "15_1_14"}; Files Tasks
 
     JLabel labelTaskNumber, labelPathToFile, labelTaskText, labelInputData, labelTestResult;
     JTextField textFieldPath;
@@ -26,7 +51,6 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         comboBoxTaskNumber = new JComboBox<>();
         comboBoxTaskNumber.setBounds(85, 10, 180, 20);
         comboBoxTaskNumber.setBackground(new Color(0x7373E7));
-        String[] taskNumbersList = {"1_1_1", "1_1_2"};
         for (String someTaskNumber : taskNumbersList) {
             comboBoxTaskNumber.addItem(someTaskNumber);
         }
