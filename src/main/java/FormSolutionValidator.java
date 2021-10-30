@@ -131,9 +131,9 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         int selectedIndex = comboBoxTaskNumber.getSelectedIndex();
         if (selectedIndex == -1) return;
 
-        if (event.getSource() == comboBoxTaskNumber) { // TODO issue display with UTF-8 and ASCII
+        if (event.getSource() == comboBoxTaskNumber) {
             String taskPageNumber = comboBoxTaskNumber.getItemAt(selectedIndex).split("_")[0];
-            String filename = "text_task_" + taskPageNumber + ".txt";
+            String filename = "text/text_task_" + taskPageNumber + ".txt";
             String textFromFile;
             try {
                 textFromFile = readTextFromFile(filename);
@@ -145,7 +145,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
 
         } else if (event.getSource() == buttonBaseCheck) {
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
-            String testFilename = "task_" + taskNumber + ".txt";
+            String testFilename = "task" + taskNumber.split("_")[0] + "/" + "task_" + taskNumber + ".txt";
             String solutionFilename = textFieldPath.getText();
             if (!Validator.isFileExists(solutionFilename)) {
                 FormSolutionValidator.showMessage(this, "Указанный файл не существует!");
