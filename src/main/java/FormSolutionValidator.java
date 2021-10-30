@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 
 public class FormSolutionValidator extends JFrame implements ActionListener {
 
@@ -156,7 +156,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             throw new ValidatorException("Cannot open file: " + filename);
         }
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         StringBuilder stringBuilder = new StringBuilder();
         String someString;
         while ((someString = reader.readLine()) != null) {

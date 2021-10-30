@@ -154,7 +154,7 @@ public class Validator {
             FormSolutionValidator.showMessage(null, "Cannot open testCasesFile: " + filename);
             throw new ValidatorException("Cannot open testCasesFile: " + filename);
         }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in)); // Add StandardCharsets.UTF_8 to InputStreamReader arg if be issues with encoding
 
         StringBuilder stringBuilder = new StringBuilder();
         try {
