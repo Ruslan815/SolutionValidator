@@ -1,7 +1,10 @@
 import java.awt.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class FormSolutionValidator extends JFrame implements ActionListener {
@@ -84,6 +87,14 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         scrollResult.setBounds(10, 520, 500, 250);
         this.add(scrollResult);
 
+        try {
+            URL resource = this.getClass().getResource("SV_icon.png");
+            BufferedImage image = null;
+            if (resource != null) image = ImageIO.read(resource);
+            this.setIconImage(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.setTitle("Solution Validator");
         this.setBounds(700, 150, 550, 850);
         this.setResizable(false);
