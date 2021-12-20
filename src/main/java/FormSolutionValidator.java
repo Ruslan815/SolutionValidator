@@ -137,7 +137,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             try {
                 textFromFile = readTextFromFile(filename);
             } catch (IOException e) {
-                textAreaTaskText.setText("Cannot read text task from file: " + filename); //System.err.println("Cannot read text task from file: " + filename);
+                textAreaTaskText.setText("Cannot read text task from file: " + filename);
                 return;
             }
             textAreaTaskText.setText(textFromFile);
@@ -164,7 +164,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                 FormSolutionValidator.showMessage(this, "Указанный файл не существует!");
                 return;
             }
-            String[] inputData = textAreaInputData.getText().split("\n"); // Get input data
+            String[] inputData = textAreaInputData.getText().split("\n"); // Получаем входные данные
             Validator.validateSolution(referenceFilename, solutionFilename, inputData, true); // Проверка в реальном времени
 
         } else if (event.getSource() == buttonPath) { // Нажали кнопку "Выбрать файл"
@@ -178,7 +178,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                     FormSolutionValidator.showMessage(this, "Выберите исполняемый(.exe) файл!");
                     return;
                 }
-                textFieldPath.setText(absolutePath); //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                textFieldPath.setText(absolutePath);
             }
         }
     }

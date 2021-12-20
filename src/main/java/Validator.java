@@ -10,17 +10,8 @@ public class Validator {
     public static void validateSolution(String referenceFilename, String solutionFilename, String[] inputData, boolean isStandardInput) {
         String referenceCommand;
         String solutionCommand;
-        // From keyboard
         referenceCommand = referenceFilename;
         solutionCommand = solutionFilename;
-        /*else { // From passed command line params // Не используется
-            String passedParams = Arrays.toString(inputData)
-                    .replace("[", "").replace("]", "").replace(",", "");
-            referenceCommand = referenceFilename + " " + passedParams;
-            solutionCommand = solutionFilename + " " + passedParams;
-        }*/
-        //System.out.println("Ref command to execute: " + referenceCommand);
-        //System.out.println("Sol command to execute: " + solutionCommand);
 
         // Запускаем программы на выполнение
         List<String> referenceOutput = startProcess(referenceCommand, inputData, isStandardInput);
@@ -28,10 +19,10 @@ public class Validator {
 
         // Сравниваем вывод полученный от обеих программ
         if (referenceOutput.equals(solutionOutput)) {
-            Main.form.textAreaTestResult.setText("Test passed."); //System.out.println("Test passed.");
+            Main.form.textAreaTestResult.setText("Test passed.");
         } else {
             Main.form.textAreaTestResult.setText("Test failed.\nInput data: " + Arrays.toString(inputData)
-                    + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput); //System.err.println("Test failed.\nInput data: " + Arrays.toString(inputData) + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
+                    + "\nReference output:\n" + referenceOutput + "\nYour output:\n" + solutionOutput);
         }
     }
 
@@ -84,12 +75,8 @@ public class Validator {
     public static void testSolutionOnTestCases(String solutionFilename, boolean isStandardInput, String testFilename) {
         String[] readFile = readTestCasesFromFile(testFilename); // чётный индекс - Input, нечётный - Output
         StringBuilder sb = new StringBuilder();
-        //***************
+
         for (int i = 0; i < readFile.length / 2; i++) {
-            //System.out.println("Test#" + i);
-            //System.out.println("Input: " + readFile[i * 2]);
-            //System.out.println("Output: " + readFile[i * 2 + 1]);
-            //***************
             String[] inputData = readFile[i * 2].split(" "); // Все входные данные должны быть на одной строке и разделены пробелом
             String executeCommand;
             if (isStandardInput) { // From keyboard
@@ -99,7 +86,7 @@ public class Validator {
                         .replace("[", "").replace("]", "").replace(",", "");
                 executeCommand = solutionFilename + " " + passedParams;
             }
-            //***************
+
             ProcessBuilder processBuilder = new ProcessBuilder();
             //processBuilder.command("cmd.exe", "/c", executeCommand); // only Windows
             processBuilder.command("bash", "-c", executeCommand);// only Linux
@@ -153,7 +140,7 @@ public class Validator {
             }
             sb.append(System.lineSeparator());
         }
-        //***************
+
         Main.form.textAreaTestResult.setText(sb.toString());
     }
 
@@ -173,7 +160,7 @@ public class Validator {
                 stringBuilder.append(someString);
             }
         } catch (Exception e) {
-            FormSolutionValidator.showMessage(null, "Cannot read testCasesFile!"); // System.err.println("Cannot read testCasesFile!");
+            FormSolutionValidator.showMessage(null, "Cannot read testCasesFile!");
             e.printStackTrace();
         }
 
