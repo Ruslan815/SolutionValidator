@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FormSolutionValidator extends JFrame implements ActionListener {
 
-    private static final String SECRET_PATH_TO_EXECUTABLE_FILES = "R:\\"; // TODO + secret path
+    private static final String SECRET_PATH_TO_EXECUTABLE_FILES = "/home/ruslan/CourseWork/"; // TODO + secret path
     private static final String[] taskNumbersList = {
             "1_1_1", "1_1_2", "1_1_3", "1_1_4", "1_1_5", "1_1_6", "1_1_7", "1_1_8",
             "1_2_1", "1_2_2", "1_2_3", "1_2_4", "1_2_5", "1_2_6", "1_2_7", "1_2_8", "1_2_9",
@@ -32,9 +32,8 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             "10_1_1", "10_1_2", "10_1_3", "10_1_4", "10_1_5", "10_1_6", "10_1_7", "10_1_8", "10_1_9", "10_1_10", "10_1_11", "10_1_12", "10_1_13", "10_1_14", "10_1_15", "10_1_16", "10_1_17",
             "11_1_1", "11_1_2", "11_1_3", "11_1_4", "11_1_5",
             "12_1_1", "12_1_2", "12_1_3", "12_1_4",
-            "13_1_1", "13_1_2", "13_1_3", "13_1_4", "13_1_5", "13_1_6", "13_1_7",
-            "14_1_1", "14_1_2", "14_1_3", "14_1_4"};
-            //"15_1_1", "15_1_2", "15_1_3", "15_1_4", "15_1_5", "15_1_6", "15_1_7", "15_1_8", "15_1_9", "15_1_10", "15_1_11", "15_1_12", "15_1_13", "15_1_14"}; Files Tasks
+            "13_1_1", "13_1_2", "13_1_3", "13_1_4", "13_1_5", "13_1_6", "13_1_7"
+    };
 
     JLabel labelTaskNumber, labelPathToFile, labelTaskText, labelInputData, labelTestResult;
     JTextField textFieldPath;
@@ -49,7 +48,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         this.add(labelTaskNumber);
 
         comboBoxTaskNumber = new JComboBox<>();
-        comboBoxTaskNumber.setBounds(85, 10, 180, 20);
+        comboBoxTaskNumber.setBounds(90, 10, 180, 20);
         comboBoxTaskNumber.setBackground(new Color(0x7373E7));
         for (String someTaskNumber : taskNumbersList) {
             comboBoxTaskNumber.addItem(someTaskNumber);
@@ -57,18 +56,18 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         comboBoxTaskNumber.addActionListener(this);
         this.add(comboBoxTaskNumber);
 
-        buttonBaseCheck = new JButton("Базовая проверка");
+        buttonBaseCheck = new JButton("Base");
         buttonBaseCheck.setBounds(320, 18, 180, 25);
         buttonBaseCheck.addActionListener(this);
         this.add(buttonBaseCheck);
 
-        buttonRealtimeCheck = new JButton("Проверка в реальном времени");
+        buttonRealtimeCheck = new JButton("Realtime");
         buttonRealtimeCheck.setBounds(300, 50, 220, 30);
         buttonRealtimeCheck.addActionListener(this);
         this.add(buttonRealtimeCheck);
 
         labelPathToFile = new JLabel("Путь к программе:");
-        labelPathToFile.setBounds(10, 40, 120, 15);
+        labelPathToFile.setBounds(10, 40, 300, 15);
         this.add(labelPathToFile);
 
         textFieldPath = new JTextField();
@@ -76,7 +75,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         textFieldPath.addActionListener(this);
         this.add(textFieldPath);
 
-        buttonPath = new JButton("Выбрать файл");
+        buttonPath = new JButton("Файл");
         buttonPath.setBounds(140, 85, 124, 25);
         buttonPath.addActionListener(this);
         this.add(buttonPath);
@@ -131,7 +130,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         int selectedIndex = comboBoxTaskNumber.getSelectedIndex();
         if (selectedIndex == -1) return;
 
-        if (event.getSource() == comboBoxTaskNumber) {
+        if (event.getSource() == comboBoxTaskNumber) { // Выбрали задание в выпадающем списке
             String taskPageNumber = comboBoxTaskNumber.getItemAt(selectedIndex).split("_")[0];
             String filename = "text/text_task_" + taskPageNumber + ".txt";
             String textFromFile;
@@ -143,7 +142,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
             }
             textAreaTaskText.setText(textFromFile);
 
-        } else if (event.getSource() == buttonBaseCheck) {
+        } else if (event.getSource() == buttonBaseCheck) { // Нажали кнопку "Base"
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
             String testFilename = "task" + taskNumber.split("_")[0] + "/" + "task_" + taskNumber + ".txt";
             String solutionFilename = textFieldPath.getText();
@@ -151,9 +150,9 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                 FormSolutionValidator.showMessage(this, "Указанный файл не существует!");
                 return;
             }
-            Validator.testSolutionOnTestCases(solutionFilename, true, testFilename);
+            Validator.testSolutionOnTestCases(solutionFilename, true, testFilename); // Базовая проверка
 
-        } else if (event.getSource() == buttonRealtimeCheck) {
+        } else if (event.getSource() == buttonRealtimeCheck) { // Нажали кнопку "Realtime"
             String taskNumber = comboBoxTaskNumber.getItemAt(selectedIndex);
             String referenceFilename = SECRET_PATH_TO_EXECUTABLE_FILES + "task_" + taskNumber + ".exe";
             if (!Validator.isFileExists(referenceFilename)) {
@@ -166,9 +165,9 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
                 return;
             }
             String[] inputData = textAreaInputData.getText().split("\n"); // Get input data
-            Validator.validateSolution(referenceFilename, solutionFilename, inputData, true);
+            Validator.validateSolution(referenceFilename, solutionFilename, inputData, true); // Проверка в реальном времени
 
-        } else if (event.getSource() == buttonPath) {
+        } else if (event.getSource() == buttonPath) { // Нажали кнопку "Выбрать файл"
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
             int result = fileChooser.showOpenDialog(this);
@@ -184,6 +183,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         }
     }
 
+    // Прочитать данные из файла
     private String readTextFromFile(String filename) throws IOException {
         InputStream in = Validator.class.getResourceAsStream(filename);
         if (in == null) {
@@ -202,6 +202,7 @@ public class FormSolutionValidator extends JFrame implements ActionListener {
         return stringBuilder.toString();
     }
 
+    // Показать всплывающее окно
     public static void showMessage(Component parentComponent, String message) {
         JOptionPane.showMessageDialog(parentComponent, message);
     }

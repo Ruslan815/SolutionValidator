@@ -1,14 +1,11 @@
 2
 ~
-Hello, Peace!
-Entered N: 2
+8 4
 ~
 3
 ~
-Hello, Peace!
-Entered N: 3
+12 9
 ~
 5
 ~
-Hello, Peace!
-Entered N: 5
+20 25

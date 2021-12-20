@@ -3,9 +3,14 @@ public class Main {
     static FormSolutionValidator form;
 
     private static void checkOperatingSystem() {
-        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
+        /*boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
         if (!isWindows) {
             System.err.println("This software can be run only on Windows.");
+            System.exit(777);
+        }*/
+        boolean isLinux = System.getProperty("os.name").toLowerCase().startsWith("linux");
+        if (!isLinux) {
+            System.err.println("This software can be run only on Linux.");
             System.exit(777);
         }
     }

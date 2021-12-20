@@ -10,21 +10,23 @@ public class Validator {
     public static void validateSolution(String referenceFilename, String solutionFilename, String[] inputData, boolean isStandardInput) {
         String referenceCommand;
         String solutionCommand;
-        if (isStandardInput) { // From keyboard
-            referenceCommand = referenceFilename;
-            solutionCommand = solutionFilename;
-        } else { // From passed command line params
+        // From keyboard
+        referenceCommand = referenceFilename;
+        solutionCommand = solutionFilename;
+        /*else { // From passed command line params // Не используется
             String passedParams = Arrays.toString(inputData)
                     .replace("[", "").replace("]", "").replace(",", "");
             referenceCommand = referenceFilename + " " + passedParams;
             solutionCommand = solutionFilename + " " + passedParams;
-        }
+        }*/
         //System.out.println("Ref command to execute: " + referenceCommand);
         //System.out.println("Sol command to execute: " + solutionCommand);
 
+        // Запускаем программы на выполнение
         List<String> referenceOutput = startProcess(referenceCommand, inputData, isStandardInput);
         List<String> solutionOutput = startProcess(solutionCommand, inputData, isStandardInput);
 
+        // Сравниваем вывод полученный от обеих программ
         if (referenceOutput.equals(solutionOutput)) {
             Main.form.textAreaTestResult.setText("Test passed."); //System.out.println("Test passed.");
         } else {
@@ -35,12 +37,14 @@ public class Validator {
 
     private static List<String> startProcess(String executeCommand, String[] inputData, boolean isStandardInput) {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("cmd.exe", "/c", executeCommand);
+        //processBuilder.command("cmd.exe", "/c", executeCommand); // only Windows
+        processBuilder.command("bash", "-c", executeCommand);// only Linux
         List<String> resultList = new ArrayList<>();
 
         try {
             Process process = processBuilder.start();
 
+            // Подаём данные на вход программе
             if (isStandardInput) {
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
                 for (String someInput : inputData) {
@@ -50,6 +54,7 @@ public class Validator {
                 writer.close();
             }
 
+            // Считываем полученный вывод программы
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -57,7 +62,7 @@ public class Validator {
             }
             reader.close();
 
-            // Error handling
+            // Обрабатываем ошибки
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
@@ -85,7 +90,7 @@ public class Validator {
             //System.out.println("Input: " + readFile[i * 2]);
             //System.out.println("Output: " + readFile[i * 2 + 1]);
             //***************
-            String[] inputData = readFile[i * 2].split(" "); // All input data in file must be separated by whitespaces and placed on one line
+            String[] inputData = readFile[i * 2].split(" "); // Все входные данные должны быть на одной строке и разделены пробелом
             String executeCommand;
             if (isStandardInput) { // From keyboard
                 executeCommand = solutionFilename;
@@ -96,12 +101,14 @@ public class Validator {
             }
             //***************
             ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("cmd.exe", "/c", executeCommand);
+            //processBuilder.command("cmd.exe", "/c", executeCommand); // only Windows
+            processBuilder.command("bash", "-c", executeCommand);// only Linux
             StringBuilder resultSB = new StringBuilder();
 
             try {
                 Process process = processBuilder.start();
 
+                // Подаём данные на вход программе
                 if (isStandardInput) {
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
                     for (String someInput : inputData) {
@@ -111,6 +118,7 @@ public class Validator {
                     writer.close();
                 }
 
+                // Считываем полученный вывод программы
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -118,7 +126,7 @@ public class Validator {
                 }
                 reader.close();
 
-                // Error handling
+                // Обрабатываем ошибки
                 int exitCode = process.waitFor();
                 if (exitCode != 0) {
                     FormSolutionValidator.showMessage(null, "Error while file executing.\n" +
@@ -135,6 +143,7 @@ public class Validator {
                 e.printStackTrace();
             }
 
+            // Сверяем вывод программы с ожидаемым выводом
             if (resultSB.toString().equals(readFile[i * 2 + 1])) {
                 System.out.println("Test#" + i + " PASSED.");
                 sb.append("Test#").append(i).append(" PASSED.");
@@ -148,6 +157,7 @@ public class Validator {
         Main.form.textAreaTestResult.setText(sb.toString());
     }
 
+    // Считываем текстовые файлы тестов из resources -> taskN
     private static String[] readTestCasesFromFile(String filename) {
         InputStream in = Validator.class.getResourceAsStream(filename);
         if (in == null) {
